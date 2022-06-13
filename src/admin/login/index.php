@@ -16,13 +16,14 @@
             $username = mysqli_real_escape_string($conn, $username);
             $password = stripslashes($_REQUEST['password']);
             $password = mysqli_real_escape_string($conn, $password);
-            $query = "SELECT * FROM `users` WHERE username='$username' and password='".hash('sha256', $password)."'";
+            $query = "SELECT * FROM `users` WHERE username='$username' and pw='".hash('sha1', $password)."'";
+            // $query = "SELECT * FROM `users` WHERE username='$username' and password='$password'";
             $result = mysqli_query($conn,$query) or die(mysql_error());
             $rows = mysqli_num_rows($result);
 
             if($rows==1){
                 $_SESSION['username'] = $username;
-                header("Location: index.php");
+                header("Location: ../../index.html");
             }else{
                 $message = "Le nom d'utilisateur ou le mot de passe est incorrect.";
             }
@@ -31,21 +32,22 @@
     <body>
         <main class="container">
             <div class="row justify-content-center align-items-center" style="min-height:100vh ;">
-                <form class="col-4">
+                <form class="col-4" action="" method="post" name="login">
                     <div class="mb-3">
-                    <label for="usernameLogin" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="usernameLogin">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username">
                     </div>
                     <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
                     </div>
-                    <div class="mb-3 form-check">
+                    <!-- <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Remember me</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <a href="../../index.html">Home</a>
+                    </div> -->
+                    <button type="submit" value="Connexion" name="submit" class="btn btn-primary">Login</button>
+                    <a href="../registration/">Sign In</a>
+                    <?php if (! empty($message)) { ?> <p class="errorMessage"><?php echo $message; ?></p><?php } ?>
                 </form>
             </div>
         </main>
