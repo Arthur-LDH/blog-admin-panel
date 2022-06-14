@@ -30,6 +30,7 @@
         }
     ?>
     <body>
+        <?php include($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/menu.php'); ?>
         <main class="container">
             <div class="row justify-content-center align-items-center" style="min-height:100vh ;">
                 <form class="col-4" action="" method="post" name="login">
