@@ -1,3 +1,77 @@
+<?php
+    require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
+
+    if(isset($_POST['registration'])) {
+        // Passage des données en variable
+        $username = htmlspecialchars($_POST['username']);
+        $email = htmlspecialchars($_POST['email']);
+        $cemail = htmlspecialchars($_POST['cemail']);
+        $password = sha1($_POST['password']);
+        $cpassword = sha1($_POST['cpassword']);
+        // Check que tous les champs soient complétés
+        if(!empty($_POST['username']) AND !empty($_POST['email']) AND !empty($_POST['cemail']) AND !empty($_POST['password']) AND !empty($_POST['cpassword'])) {
+            // Check que le pseudo ne soit pas utilisé
+            $requser = $conn->prepare("SELECT * FROM users WHERE username = ?");
+            $requser->execute([$username]);
+            $userexist = $requser->fetch();
+            if($userexist == 0) {
+                if($email == $cemail) {
+                    // Check que le mail ne soit pas déjà utilisé
+                    if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $reqmail = $conn->prepare("SELECT * FROM users WHERE email = ?");
+                        $reqmail->execute([$email]);
+                        $mailexist = $reqmail->fetch();
+                        // $conn->next_result();
+                        if($mailexist == 0) {
+                            if($password == $cpassword) {
+                                // Créé une clef de confirmation
+                                $longueurKey = 15;
+                                $key = "";
+                                for($i=1;$i<$longueurKey;$i++) {
+                                    $key .= mt_rand(0,9);
+                                }
+                                // Insert les nouvelles données dans la bdd
+                                $insertmbr = $conn->prepare("INSERT INTO users (username, email, pw, confirmkey) VALUES(?, ?, ?, ?)");
+            
+                                $insertmbr->execute(array($username, $email, $password, $key));
+                                
+                                // Créé le mail de confirmation
+                                $header="MIME-Version: 1.0\r\n";
+                                $header.='From:"arthurldh@webcalibur.com'."\n";
+                                $header.='Content-Type:text/html; charset="uft-8"'."\n";
+                                $header.='Content-Transfer-Encoding: 8bit';
+                                $message='
+                                <html>
+                                    <body>
+                                        <div align="center">
+                                        <a href="confirmation.php?username='.urlencode($username).'&key='.$key.'">Confirm your account</a>
+                                        </div>
+                                    </body>
+                                </html>
+                                ';
+                                mail($email, "Account Confirmation", $message, $header);
+                                $erreur = "Your account has been created";
+                            } else {
+                                $erreur = "Your passwords are not the same";
+                            }
+                        } else {
+                        $erreur = "Your email is already used on this website";
+                        }
+                    } else {
+                        $erreur = "Your email does not exist";
+                    }
+                } else {
+                    $erreur = "Your emails are not the same";
+                }
+            } else {
+                $erreur = "Your Username already exists";
+            }
+        } else {
+            $erreur = "Tous les champs doivent être complétés !";
+        }
+        }
+?>
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -6,83 +80,10 @@
     <title>Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     </head>
-    <?php
-        require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
-
-        if(isset($_POST['registration'])) {
-            // Passage des données en variable
-            $username = htmlspecialchars($_POST['username']);
-            $email = htmlspecialchars($_POST['email']);
-            $cemail = htmlspecialchars($_POST['cemail']);
-            $password = sha1($_POST['password']);
-            $cpassword = sha1($_POST['cpassword']);
-            // Check que tous les champs soient complétés
-            if(!empty($_POST['username']) AND !empty($_POST['email']) AND !empty($_POST['cemail']) AND !empty($_POST['password']) AND !empty($_POST['cpassword'])) {
-                // Check que le pseudo ne soit pas utilisé
-                $requser = $conn->prepare("SELECT * FROM users WHERE username = ?");
-                $requser->execute([$username]);
-                $userexist = $requser->fetch();
-                if($userexist == 0) {
-                    if($email == $cemail) {
-                        // Check que le mail ne soit pas déjà utilisé
-                        if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            $reqmail = $conn->prepare("SELECT * FROM users WHERE email = ?");
-                            $reqmail->execute([$email]);
-                            $mailexist = $reqmail->fetch();
-                            // $conn->next_result();
-                            if($mailexist == 0) {
-                                if($password == $cpassword) {
-                                    // Créé une clef de confirmation
-                                    $longueurKey = 15;
-                                    $key = "";
-                                    for($i=1;$i<$longueurKey;$i++) {
-                                        $key .= mt_rand(0,9);
-                                    }
-                                    // Insert les nouvelles données dans la bdd
-                                    $insertmbr = $conn->prepare("INSERT INTO users (username, email, pw, confirmkey) VALUES(?, ?, ?, ?)");
-                
-                                    $insertmbr->execute(array($username, $email, $password, $key));
-                                    
-                                    // Créé le mail de confirmation
-                                    $header="MIME-Version: 1.0\r\n";
-                                    $header.='From:"arthurldh@webcalibur.com'."\n";
-                                    $header.='Content-Type:text/html; charset="uft-8"'."\n";
-                                    $header.='Content-Transfer-Encoding: 8bit';
-                                    $message='
-                                    <html>
-                                        <body>
-                                            <div align="center">
-                                            <a href="confirmation.php?username='.urlencode($username).'&key='.$key.'">Confirm your account</a>
-                                            </div>
-                                        </body>
-                                    </html>
-                                    ';
-                                    mail($email, "Account Confirmation", $message, $header);
-                                    $erreur = "Your account has been created";
-                                } else {
-                                    $erreur = "Your passwords are not the same";
-                                }
-                            } else {
-                            $erreur = "Your email is already used on this website";
-                            }
-                        } else {
-                            $erreur = "Your email does not exist";
-                        }
-                    } else {
-                        $erreur = "Your emails are not the same";
-                    }
-               } else {
-                  $erreur = "Your Username already exists";
-               }
-            } else {
-               $erreur = "Tous les champs doivent être complétés !";
-            }
-         }
-    ?>
     <body>
         <?php include($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/menu.php'); ?>
         <main class="container">
-            <div class="row justify-content-center align-items-center" style="min-height:100vh ;">
+            <div class="row justify-content-center align-items-center" style="margin-top: 10vh ;">
                 <form class="col-4" action="" method="post" name="registration">
                     <div class="mb-3">
                     <label for="username" class="form-label">Username</label>

@@ -12,4 +12,11 @@
     if($conn === false){
         die("ERROR : Unable to connect " . mysqli_connect_error());
     }
+
+    function checksession(){
+        if (session_status() == PHP_SESSION_ACTIVE) {
+            header('Location: '.$_SERVER['DOCUMENT_ROOT'].'/Panel Blog/');
+        }
+    }
+
 ?>
