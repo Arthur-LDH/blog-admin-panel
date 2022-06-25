@@ -1,25 +1,37 @@
 <?php
+
+    session_start();
+
     require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
 
-    // session_start();
+    // if (isset($_POST['username']) AND !empty($_POST['username'])){
+    //     $_SESSION['username'] = $_POST['username'];
+    // } else{
+    //     session_destroy();
+    // }
 
-    checksession();
+    // checksession();
 
     if (isset($_POST['username'])){
-        $username = stripslashes($_REQUEST['username']);
-        $username = mysqli_real_escape_string($conn, $username);
-        $password = stripslashes($_REQUEST['password']);
-        $password = mysqli_real_escape_string($conn, $password);
-        $query = "SELECT * FROM `users` WHERE username='$username' and pw='".hash('sha1', $password)."'";
-        // $query = "SELECT * FROM `users` WHERE username='$username' and password='$password'";
-        $result = mysqli_query($conn,$query) or die(mysql_error());
-        $rows = mysqli_num_rows($result);
+        if(!empty($_POST['username']) AND !empty($_POST['password'])){
+            $username = stripslashes($_REQUEST['username']);
+            $username = mysqli_real_escape_string($conn, $username);
+            $password = stripslashes($_REQUEST['password']);
+            $password = mysqli_real_escape_string($conn, $password);
+            $query = "SELECT * FROM `users` WHERE username='$username' and pw='".hash('sha1', $password)."'";
+            $result = mysqli_query($conn,$query) or die(mysql_error());
+            $rows = mysqli_num_rows($result);
 
-        if($rows==1){
-            $_SESSION['username'] = $username;
-            header("Location: /Panel%20Blog/");
+            if($rows==1){
+                $_SESSION['username'] = $username;
+                $_SESSION['pw'] = $password;
+                // setcookie('username' , $_SESSION['username'], time() + 7*24*3600, null, null, false, true);
+                header("Location: /Panel%20Blog/");
+            }else{
+                $message = "Le nom d'utilisateur ou le mot de passe est incorrect.";
+            }
         }else{
-            $message = "Le nom d'utilisateur ou le mot de passe est incorrect.";
+            $message = "Tous les champs doivent être rempli.";
         }
     }
 ?>
@@ -51,9 +63,11 @@
                     </div> -->
                     <button type="submit" value="Connexion" name="submit" class="btn btn-primary">Login</button>
                     <a href="../registration/">Sign In</a>
-                    <?php if (! empty($message)) { ?> <p class="errorMessage"><?php echo $message; ?></p><?php } ?>
+                    <?php if (! empty($message)) { ?> <p class="errorMessage"  style="color: red;"><?php echo $message; ?></p><?php } ?>
                 </form>
             </div>
+
+            <p> Mon pseudo est <?php echo $_SESSION['username'] ?></p>
         </main>
         
 
