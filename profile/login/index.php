@@ -4,13 +4,9 @@
 
     require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
 
-    // if (isset($_POST['username']) AND !empty($_POST['username'])){
-    //     $_SESSION['username'] = $_POST['username'];
-    // } else{
-    //     session_destroy();
-    // }
-
-    // checksession();
+    if (isset($_SESSION['username'])) {
+        header("Location: /Panel%20Blog/");
+    };
 
     if (isset($_POST['username'])){
         if(!empty($_POST['username']) AND !empty($_POST['password'])){
@@ -18,15 +14,28 @@
             $username = mysqli_real_escape_string($conn, $username);
             $password = stripslashes($_REQUEST['password']);
             $password = mysqli_real_escape_string($conn, $password);
-            $query = "SELECT * FROM `users` WHERE username='$username' and pw='".hash('sha1', $password)."'";
+            $query = " SELECT * FROM `users` WHERE username='$username' and pw='".hash('sha1', $password)."' ";
             $result = mysqli_query($conn,$query) or die(mysql_error());
             $rows = mysqli_num_rows($result);
-
             if($rows==1){
-                $_SESSION['username'] = $username;
-                $_SESSION['pw'] = $password;
-                // setcookie('username' , $_SESSION['username'], time() + 7*24*3600, null, null, false, true);
-                header("Location: /Panel%20Blog/");
+                while($row = mysqli_fetch_array($result)){
+                    $id = $row['id'];
+                    $confirmed = $row['confirmed'];
+                    $role = $row['role'];
+                }
+                $_SESSION['confirmed'] = $confirmed;
+                if($_SESSION['confirmed']==1){
+                    $_SESSION['username'] = $username;
+                    $_SESSION['pw'] = $password;
+                    $_SESSION['id'] = $id;
+                    $_SESSION['role'] = $role;
+                    if(isset($_POST['remember'])){
+                        setcookie('username' , $_SESSION['username'], time() + 7*24*3600, null, null, false, true);
+                    };
+                    header("Location: /Panel%20Blog/");
+                }else{
+                    $message = "Votre compte n'a pas encore été activé.";
+                }
             }else{
                 $message = "Le nom d'utilisateur ou le mot de passe est incorrect.";
             }
@@ -57,17 +66,15 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password">
                     </div>
-                    <!-- <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Remember me</label>
-                    </div> -->
+                    <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">Remember me</label>
+                    </div>
                     <button type="submit" value="Connexion" name="submit" class="btn btn-primary">Login</button>
                     <a href="../registration/">Sign In</a>
                     <?php if (! empty($message)) { ?> <p class="errorMessage"  style="color: red;"><?php echo $message; ?></p><?php } ?>
                 </form>
             </div>
-
-            <p> Mon pseudo est <?php echo $_SESSION['username'] ?></p>
         </main>
         
 

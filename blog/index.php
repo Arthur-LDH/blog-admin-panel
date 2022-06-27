@@ -13,7 +13,6 @@
     </head>
     <body>
         
-        <p> Mon pseudo est <?php echo $_SESSION['username'] ?></p>
         
 
 

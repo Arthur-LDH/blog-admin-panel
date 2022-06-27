@@ -1,5 +1,12 @@
 <?php
+
+    session_start();
+
     require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
+
+    if (isset($_SESSION['username'])) {
+        header("Location: /Panel%20Blog/");
+    };
 
     if(isset($_POST['registration'])) {
         // Passage des données en variable
@@ -21,7 +28,6 @@
                         $reqmail = $conn->prepare("SELECT * FROM users WHERE email = ?");
                         $reqmail->execute([$email]);
                         $mailexist = $reqmail->fetch();
-                        // $conn->next_result();
                         if($mailexist == 0) {
                             if($password == $cpassword) {
                                 // Créé une clef de confirmation

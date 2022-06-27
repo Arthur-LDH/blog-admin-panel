@@ -12,24 +12,28 @@
 
       <?php 
         if (isset($_SESSION['username'])) {
-          echo '<div class="dropdown text-end">
-                  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="/Panel%20Blog/assets/img/avatar-blank.jpg" alt="mdo" width="45" height="45" class="rounded-circle">
-                  </a>
-                  <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
-                    <li><p class="dropdown-item disabled">' . $_SESSION['username'] . '</p></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="/Panel%20Blog/logout.php">Sign out</a></li>
-                  </ul>
-                </div>' ;
+            echo '<div class="dropdown text-end">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/Panel%20Blog/assets/img/avatar-blank.jpg" alt="mdo" width="45" height="45" class="rounded-circle"></a>
+                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+                      <li><p class="dropdown-item disabled">' . $_SESSION['username'] . '</p></li>';
+
+            if ($_SESSION['role']==1) {
+                echo '<li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/Panel%20Blog/admin/">Admin Panel</a></li>';
+            }
+            echo '    <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/Panel%20Blog/profile/">Profile</a></li>
+                      <li><a class="dropdown-item" href="#">Settings</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/Panel%20Blog/logout.php">Sign out</a></li>
+                      </ul>
+                      </div>' ;
         } else {
-          echo '<div class="col-md-3 text-end">
-                  <a href="/Panel%20Blog/admin/login/" type="button" class="btn btn-outline-primary me-2">Login</a>
-                  <a href="/Panel%20Blog/admin/registration/" type="button" class="btn btn-primary">Sign-up</a>
-                </div>' ;
+            echo '<div class="col-md-3 text-end">
+                    <a href="/Panel%20Blog/profile/login/" type="button" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="/Panel%20Blog/profile/registration/" type="button" class="btn btn-primary">Sign in</a>
+                  </div>' ;
         }
       ?>
     </header>
