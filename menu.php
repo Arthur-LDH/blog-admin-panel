@@ -11,20 +11,20 @@
       </ul>
 
       <?php 
-        if (isset($_SESSION['username'])) {
+        if (isset($_COOKIE['username']) || isset($_SESSION['username']) && isset($_COOKIE['pw']) || isset($_SESSION['pw'])) {
             echo '<div class="dropdown text-end">
                     <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="/Panel%20Blog/assets/img/avatar-blank.jpg" alt="mdo" width="45" height="45" class="rounded-circle"></a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
-                      <li><p class="dropdown-item disabled">' . $_SESSION['username'] . '</p></li>';
+                      <li><p class="dropdown-item disabled">' . $user . '</p></li>';
 
-            if ($_SESSION['role']==1) {
+            if ($role==1) {
                 echo '<li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="/Panel%20Blog/admin/">Admin Panel</a></li>';
             }
             echo '    <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="/Panel%20Blog/profile/">Profile</a></li>
-                      <li><a class="dropdown-item" href="#">Settings</a></li>
+                      <li><a class="dropdown-item" href="/Panel%20Blog/profile/profile.php?id='. $id .'">Profile</a></li>
+                      <li><a class="dropdown-item" href="/Panel%20Blog/profile/settings.php">Settings</a></li>
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="/Panel%20Blog/logout.php">Sign out</a></li>
                       </ul>

@@ -1,6 +1,8 @@
 <?php 
     session_start();
 
+    require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
+
     include($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/menu.php'); 
 ?>
 <!doctype html>

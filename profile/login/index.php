@@ -1,10 +1,19 @@
 <?php
 
     session_start();
+    session_unset();
+    setcookie("username", NULL, -1, "/");
+    unset($_COOKIE['username']);
+    setcookie("id", NULL, -1, "/");
+    unset($_COOKIE['id']);
+    setcookie("role", NULL, -1, "/");
+    unset($_COOKIE['role']);
+    setcookie("pw", NULL, -1, "/");
+    unset($_COOKIE['pw']);
 
     require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
 
-    if (isset($_SESSION['username'])) {
+    if (isset($COOKIE['username'])) {
         header("Location: /Panel%20Blog/");
     };
 
@@ -30,7 +39,10 @@
                     $_SESSION['id'] = $id;
                     $_SESSION['role'] = $role;
                     if(isset($_POST['remember'])){
-                        setcookie('username' , $_SESSION['username'], time() + 7*24*3600, null, null, false, true);
+                        setcookie('username' , $_SESSION['username'], time() + 365*24*3600, "/");
+                        setcookie('pw' , $_SESSION['pw'], time() + 365*24*3600, "/");
+                        setcookie('id' , $_SESSION['id'], time() + 365*24*3600, "/");
+                        setcookie('role' , $_SESSION['role'], time() + 365*24*3600, "/");
                     };
                     header("Location: /Panel%20Blog/");
                 }else{
@@ -75,6 +87,20 @@
                     <?php if (! empty($message)) { ?> <p class="errorMessage"  style="color: red;"><?php echo $message; ?></p><?php } ?>
                 </form>
             </div>
+
+            <?php 
+                if (isset($_COOKIE['username']) && isset($_COOKIE['pw'])) {
+                    echo '<p> Mon id est ' . $_COOKIE['id'] . '.';
+                    if ($_COOKIE['role']==1) {
+                        echo '</br> Je suis admin.</p>';
+                    } else{
+                        echo '</p>';
+                    };
+                } else {
+                    echo "<p>Les cookies sont supprimés</p>";
+                };
+                
+            ?>
         </main>
         
 

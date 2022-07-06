@@ -13,10 +13,26 @@
         die("ERROR : Unable to connect " . mysqli_connect_error());
     }
 
-    function checksession(){
-        if (session_status() == PHP_SESSION_ACTIVE) {
-            header('Location: '.$_SERVER['DOCUMENT_ROOT'].'/Panel Blog/');
-        }
+    $user = "";
+    $pw = "";
+    $id = "";
+    $role = "";
+
+    if (isset($_COOKIE['username']) && isset($_COOKIE['pw'])) {
+        $user = $_COOKIE['username'];
+        $pw = $_COOKIE['pw'];
+        $id = $_COOKIE['id'];
+        $role = $_COOKIE['role'];
+    } elseif (isset($_SESSION['username']) && isset($_SESSION['pw'])) {
+        $user = $_SESSION['username'];
+        $pw = $_SESSION['pw'];
+        $id = $_SESSION['id'];
+        $role = $_SESSION['role'];
+    } else{
+        $user = "";
+        $pw = "";
+        $id = "";
+        $role = "";
     }
 
 ?>

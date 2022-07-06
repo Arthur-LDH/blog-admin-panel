@@ -1,5 +1,7 @@
 <?php 
     session_start();
+    
+    require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
 ?>
 <!doctype html>
 <html lang="en">
@@ -15,14 +17,24 @@
         <div class="container">
         
             <?php 
-                if (isset($_SESSION['username'])) {
-                    echo '<p> Mon id est ' . $_SESSION['id'] . '.';
-                    if ($_SESSION['role']==1) {
+                if (isset($_COOKIE['username']) && isset($_COOKIE['pw'])) {
+                    echo '<p> Mon id est ' . $id . '.';
+                    if ($role==1) {
                         echo '</br> Je suis admin.</p>';
                     } else{
                         echo '</p>';
                     };
-                };  
+                
+                } elseif (isset($_SESSION['username']) && isset($_SESSION['pw'])){
+                    echo "<p> Il n'y a pas de cookies mais mon id est " . $id . '.';
+                    if ($role==1) {
+                        echo '</br> Je suis admin.</p>';
+                    } else{
+                        echo '</p>';
+                    };
+                } else {
+                    echo "<p>Les cookies sont supprimés</p>";
+                };
                 
             ?>
         </div>
