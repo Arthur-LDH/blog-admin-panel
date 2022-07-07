@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid bg-white px-5 m-0">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
       <a href="/Panel%20Blog/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
         <!-- <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg> -->
@@ -23,7 +23,7 @@
                       <li><a class="dropdown-item" href="/Panel%20Blog/admin/">Admin Panel</a></li>';
             }
             echo '    <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="/Panel%20Blog/profile/profile.php?id='. $id .'">Profile</a></li>
+                      <li><a class="dropdown-item" href="/Panel%20Blog/profile/index.php?id='. $id .'">Profile</a></li>
                       <li><a class="dropdown-item" href="/Panel%20Blog/profile/settings.php">Settings</a></li>
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="/Panel%20Blog/logout.php">Sign out</a></li>

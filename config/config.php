@@ -35,4 +35,7 @@
         $role = "";
     }
 
+    $lastname = "";
+    $avatar = "";
+
 ?>
