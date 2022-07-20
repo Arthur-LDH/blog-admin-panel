@@ -23,7 +23,11 @@
                 <div class="row align-items-start justify-content-between">
                     <div class="col d-flex align-items-center justify-content-start">
                         <a href="#" class="me-3">
-                            <img src="/Panel%20Blog/assets/img/avatar-blank.jpg" alt="mdo" width="80" height="80" class="rounded-circle">
+                            <div width="80" height="80" class="rounded-circle" style="width: 80px; height: 80px; overflow: hidden; text-align: center; vertical-align: middle;">
+                                <?php echo '<img src="/Panel%20Blog'.$avatar.'" alt="mdo" style="margin: auto; max-width:80px; height:auto;");">'
+                                ?>
+                            </div>
+                            
                         </a>
                         <p class="d-flex align-items-center fs-4 fw-bold lh-sm" style="margin: 0;"> <?php echo $user ?> <br> <?php echo $lastname ?></p>
                     </div>

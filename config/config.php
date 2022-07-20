@@ -13,29 +13,36 @@
         die("ERROR : Unable to connect " . mysqli_connect_error());
     }
 
-    $user = "";
-    $pw = "";
-    $id = "";
-    $role = "";
+    // Variable pour check les connexions
+    $ifconnected = isset($_COOKIE['email']) || isset($_SESSION['email']) && isset($_COOKIE['pw']) || isset($_SESSION['pw']) ;
 
-    if (isset($_COOKIE['username']) && isset($_COOKIE['pw'])) {
-        $user = $_COOKIE['username'];
+
+    // Conditions pour changer les variables si elles sont enregistrées en tant que cookies ou non
+    if (isset($_COOKIE['email']) && isset($_COOKIE['pw'])) {
+        $email = $_COOKIE['email'];
         $pw = $_COOKIE['pw'];
-        $id = $_COOKIE['id'];
-        $role = $_COOKIE['role'];
-    } elseif (isset($_SESSION['username']) && isset($_SESSION['pw'])) {
-        $user = $_SESSION['username'];
+        
+    } elseif (isset($_SESSION['email']) && isset($_SESSION['pw'])) {
+        $email = $_SESSION['email'];
         $pw = $_SESSION['pw'];
-        $id = $_SESSION['id'];
-        $role = $_SESSION['role'];
     } else{
-        $user = "";
+        $email = "";
         $pw = "";
-        $id = "";
-        $role = "";
+    }
+
+    // Met en variable les différentes informations de l'utilisateur connecté
+    $query = " SELECT * FROM `users` WHERE email='$email' and pw='".hash('sha1', $pw)."' ";
+    $result = mysqli_query($conn,$query) or die(mysql_error());
+    $rows = mysqli_num_rows($result);
+    if($rows==1){
+        while($row = mysqli_fetch_array($result)){
+            $user = $row['username'];
+            $id = $row['id'];
+            $role = $row['role'];
+            $avatar = $row['avatar'];
+        } 
     }
 
     $lastname = "";
-    $avatar = "";
 
 ?>

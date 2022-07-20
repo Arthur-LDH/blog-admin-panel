@@ -1,48 +1,32 @@
 <?php
 
     session_start();
-    session_unset();
-    setcookie("username", NULL, -1, "/");
-    unset($_COOKIE['username']);
-    setcookie("id", NULL, -1, "/");
-    unset($_COOKIE['id']);
-    setcookie("role", NULL, -1, "/");
-    unset($_COOKIE['role']);
-    setcookie("pw", NULL, -1, "/");
-    unset($_COOKIE['pw']);
 
     require($_SERVER['DOCUMENT_ROOT'].'/Panel Blog/config/config.php');
 
-    if (isset($COOKIE['username'])) {
+    if ($ifconnected) {
         header("Location: /Panel%20Blog/");
     };
 
-    if (isset($_POST['username'])){
-        if(!empty($_POST['username']) AND !empty($_POST['password'])){
-            $username = stripslashes($_REQUEST['username']);
-            $username = mysqli_real_escape_string($conn, $username);
+    if (isset($_POST['email'])){
+        if(!empty($_POST['email']) AND !empty($_POST['password'])){
+            $email = stripslashes($_REQUEST['email']);
+            $email = mysqli_real_escape_string($conn, $email);
             $password = stripslashes($_REQUEST['password']);
             $password = mysqli_real_escape_string($conn, $password);
-            $query = " SELECT * FROM `users` WHERE username='$username' and pw='".hash('sha1', $password)."' ";
+            $query = " SELECT * FROM `users` WHERE email='$email' and pw='".hash('sha1', $password)."' ";
             $result = mysqli_query($conn,$query) or die(mysql_error());
             $rows = mysqli_num_rows($result);
             if($rows==1){
                 while($row = mysqli_fetch_array($result)){
-                    $id = $row['id'];
                     $confirmed = $row['confirmed'];
-                    $role = $row['role'];
                 }
-                $_SESSION['confirmed'] = $confirmed;
-                if($_SESSION['confirmed']==1){
-                    $_SESSION['username'] = $username;
+                if($confirmed==1){
+                    $_SESSION['email'] = $email;
                     $_SESSION['pw'] = $password;
-                    $_SESSION['id'] = $id;
-                    $_SESSION['role'] = $role;
                     if(isset($_POST['remember'])){
-                        setcookie('username' , $_SESSION['username'], time() + 365*24*3600, "/");
+                        setcookie('email' , $_SESSION['email'], time() + 365*24*3600, "/");
                         setcookie('pw' , $_SESSION['pw'], time() + 365*24*3600, "/");
-                        setcookie('id' , $_SESSION['id'], time() + 365*24*3600, "/");
-                        setcookie('role' , $_SESSION['role'], time() + 365*24*3600, "/");
                     };
                     header("Location: /Panel%20Blog/");
                 }else{
@@ -71,8 +55,8 @@
             <div class="row justify-content-center align-items-center" style="margin-top: 20vh ;">
                 <form class="col-4" action="" method="post" name="login">
                     <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" name="email">
                     </div>
                     <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
@@ -89,9 +73,9 @@
             </div>
 
             <?php 
-                if (isset($_COOKIE['username']) && isset($_COOKIE['pw'])) {
+                if (isset($_COOKIE['email']) && isset($_COOKIE['pw'])) {
                     echo '<p> Mon id est ' . $_COOKIE['id'] . '.';
-                    if ($_COOKIE['role']==1) {
+                    if ($role==1) {
                         echo '</br> Je suis admin.</p>';
                     } else{
                         echo '</p>';

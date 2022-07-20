@@ -1,0 +1,8 @@
+- Modifications des informations du profil
+- Page profil unique pour chaque users
+- Seul admins et propriétaire du profil peut modifier les informations du profil
+- Liste des users dans le panel d'admin
+- Modifications des informations directement depuis le panel d'admin
+- Possibilité de changer le role du user depuis le panel
+- Ajout de la page blog
+- Ecriture et edit des articles blog depuis le panel admin

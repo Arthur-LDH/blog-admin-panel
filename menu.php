@@ -11,12 +11,14 @@
       </ul>
 
       <?php 
-        if (isset($_COOKIE['username']) || isset($_SESSION['username']) && isset($_COOKIE['pw']) || isset($_SESSION['pw'])) {
+        if ($ifconnected) {
             echo '<div class="dropdown text-end">
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="/Panel%20Blog/assets/img/avatar-blank.jpg" alt="mdo" width="45" height="45" class="rounded-circle"></a>
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle d-flex flex-row align-items-center" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div width="80" height="80" class="rounded-circle" style="display:block; width: 45px; height: 45px; overflow: hidden; text-align: center; vertical-align: middle;">
+                        <img src="/Panel%20Blog'.$avatar.'" alt="mdo" style="margin: auto; max-width:45px; height:auto;");">
+                    </div></a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
-                      <li><p class="dropdown-item disabled">' . $user . '</p></li>';
+                      <li><p class="dropdown-item disabled">Hello, '.$user.'</p></li>';
 
             if ($role==1) {
                 echo '<li><hr class="dropdown-divider"></li>
